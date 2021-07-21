@@ -83,11 +83,38 @@
     display: block;
 }
 
-/* #activeVertex{
-    position:absolute;
-    transform:translate(-50%,-50%);
-    height:35px;
-    width:35px;
-    border-radius:50%;
-    border:2px solid black;
-} */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    width: 88px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    text-align: center;
+}
+.dropdown-content button{
+    color: black;
+    padding: 12px 12px;
+    text-decoration: none;
+    display: block;
+    border: none;
+    margin:0px auto 0px auto;
+    width: 88px;
+}
+.dropdown-content button:hover {background-color: #ddd}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.show {display:block;}
+
+.show-text{
+    display: inline-block;
+    position: relative;
+}
+
+.hidden-input {display: none;}

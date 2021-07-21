@@ -15,7 +15,16 @@
     </div>
    
     <div class="menu">
-        <button class="menu_btn new">New</button>
+        <div class="dropdown">
+            <button onclick="dropdown()"class="menu_btn new">New</button>
+            <div id="myDropdown" class="dropdown-content">
+                <button onclick="newDirected()" class="dropdown_directed">Directed</button>
+                <button onclick="newUndirected()" class="dropdown_undirected">Undirected</button>
+            </div>
+
+        </div>
+        
+        
         <button class="menu_btn import">Import</button>
         <button class="menu_btn export">Export</button>
     </div>
@@ -24,10 +33,11 @@
         <!-- <h3 class="label">Graph Editor</h3> -->
         <div class="editor_menu 1">
             <button onclick="addVertexTop()"><i class="new_vertex"></i>Vertex</button>
-            <button onclick="addEdgeTop()"><i class="new_dedge"></i>Directed Edge</button>
+            <button onclick="addEdgeTop()"><i class="new_dedge"></i>Edge</button>
             <!-- <button onclick="addEdgeTop()"><i class="new_uedge"></i>Undirected Edge</button> -->
             <button onclick="deleteTop()"><i class="new_uedge"></i>Delete</button>
-            <button onclick="addTextTop()"><i class="new_text"></i>Text</a>
+            <button onclick="addText()"><i class="new_text"></i>Text</button>
+            <input type="text" id="label-input" class="hidden-input">
         </div>
         <div class = "top" id="cy">
             <script type="text/javascript" src="{{ url_for('static', filename='js/Cytoscape.js') }}"></script>
