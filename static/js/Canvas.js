@@ -1,4 +1,3 @@
-ethereum.autoRefreshOnNetworkChange = false;
 function dropdown() {
     document.getElementById("myDropdown").classList.toggle("show");
 }
@@ -34,3 +33,39 @@ function addText() {
         document.getElementById("label-input").className="hidden-input";
     });
 }
+
+function exportGraph(){
+    var baseJSON = cy.json();
+    var productionID = "1"; //tmp
+    var directionStatus = "";
+    if(baseJSON["style"][1]["style"]["target-arrow-shape"]=="triangle") directionStatus = "Directed";
+    else directionStatus = "Undirected";
+    var finalJSON = {
+        "production":{
+            "productionID":productionID,
+            "directionStatus":directionStatus,
+
+            "left":{
+                "subgraph":{
+                    
+                }
+            },
+
+            "right":{
+                "subgraph":{
+
+                }
+            }
+        }
+    }
+    var line = 0;
+    for(var i = 0; i < baseJSON["elements"]["nodes"].length; i++){
+        finalJSON["production"]["right"]["subgraph"][line++]=([baseJSON["elements"]["nodes"][i]["group"], [baseJSON["elements"]["nodes"][i]["data"]]])
+    }
+    for(var i = 0; i < baseJSON["elements"]["edges"].length; i++){
+        finalJSON["production"]["right"]["subgraph"][line++]=([baseJSON["elements"]["edges"][i]["group"], [baseJSON["elements"]["edges"][i]["data"]]])
+    }
+    
+    console.log(finalJSON);
+}
+
