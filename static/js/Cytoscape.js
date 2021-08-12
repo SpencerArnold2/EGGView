@@ -8,6 +8,12 @@ function addVertexTop() {
 
 }
 
+function addVertex(id, label, newX, newY) {
+    var eles = cy.add([
+        { group: 'nodes', data: { label: label, id: id, }, position: { x: newX, y: newY } }
+    ]);
+}
+
 function addEdgeTop() {
     var node1, node2;
     cy.on('tap', 'node', function (evt) {
@@ -27,6 +33,13 @@ function addEdgeTop() {
             cy.removeListener('tap');
         }
     });
+}
+
+function addEdge(id, label, node1, node2){
+    console.log(node1, node2);
+    var eles = cy.add([
+        { group: 'edges', data: { label: label, id: id, source: node1, target: node2 } }
+    ]);
 }
 
 function deleteTop() {
@@ -85,6 +98,7 @@ function newDirected() { // creates new cytoscape for directed graphs
         }
     
     });
+    console.log("New directed graph created")
 }
 
 function newUndirected() { // creates new cytoscape for undirected graphs
