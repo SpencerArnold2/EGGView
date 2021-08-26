@@ -1,34 +1,64 @@
 var left_vID;
 var right_vID;
 var left_eID;
-var right_eID;
+var right_eID, left_dvID, right_dvID;
 function addVertexLeft() {
 
     var eles = cy_left.add([
-        { group: 'nodes', data: { label: 'n' + left_vID, id: 'n' + left_vID++, }, position: { x: 100, y: 100 } }
+        { group: 'nodes', data: { label: 'n' + left_vID, id: 'n' + left_vID++, type: "ellipse"}, position: { x: 100, y: 100 } }
     ]);
 
 }
 
 function _addVertexLeft(id, label, newX, newY) {
     var eles = cy_left.add([
-        { group: 'nodes', data: { label: label, id: id, }, position: { x: newX, y: newY } }
+        { group: 'nodes', data: { label: label, id: id, type: "ellipse"}, position: { x: newX, y: newY } }
     ]);
     left_vID++;
 }
 function addVertexRight() {
 
     var eles = cy_right.add([
-        { group: 'nodes', data: { label: 'n' + right_vID, id: 'n' + right_vID++, }, position: { x: 100, y: 100 } }
+        { group: 'nodes', data: { label: 'n' + right_vID, id: 'n' + right_vID++, type: "ellipse"}, position: { x: 100, y: 100 } }
     ]);
 
 }
 function _addVertexRight(id, label, newX, newY) {
     var eles = cy_right.add([
-        { group: 'nodes', data: { label: label, id: id, }, position: { x: newX, y: newY } }
+        { group: 'nodes', data: { label: label, id: id, type: "ellipse"}, position: { x: newX, y: newY } }
     ]);
     right_vID++;
 }
+
+function addDEdgeLeft() {
+
+    var eles = cy_left.add([
+        { group: 'nodes', data: { label: 'dv' + left_dvID, id: 'dv' + left_dvID++, type: "round-tag"}, position: { x: 100, y: 100 } }
+    ]);
+
+}
+
+function _addDEdgeLeft(id, label, newX, newY) {
+    var eles = cy_left.add([
+        { group: 'nodes', data: { label: label, id: id, type: "round-tag"}, position: { x: newX, y: newY } }
+    ]);
+    left_dvID++;
+}
+function addDEdgeRight() {
+
+    var eles = cy_right.add([
+        { group: 'nodes', data: { label: 'dv' + right_dvID, id: 'dv' + right_dvID++, type: "round-tag"}, position: { x: 100, y: 100 } }
+    ]);
+
+}
+function _addDEdgeRight(id, label, newX, newY) {
+    var eles = cy_right.add([
+        { group: 'nodes', data: { label: label, id: id, type: "round-tag"}, position: { x: newX, y: newY } }
+    ]);
+    right_dvID++;
+}
+
+
 
 function addEdgeLeft() {
     var node1, node2;
@@ -125,6 +155,8 @@ function newDirected(direction) { // creates new cytoscape for directed graphs
     // cy.destroy();
     left_vID = 0;
     right_vID = 0;
+    left_dvID = 0;
+    right_dvID = 0;
     left_eID = 0;
     right_eID = 0;
     if(direction=="left"){
@@ -140,7 +172,8 @@ function newDirected(direction) { // creates new cytoscape for directed graphs
                     selector: 'node',
                     style: {
                         'background-color': '#666',
-                        'label': 'data(label)'
+                        'label': 'data(label)',
+                        'shape': 'data(type)'
                     }
                 },
         
@@ -176,7 +209,8 @@ function newDirected(direction) { // creates new cytoscape for directed graphs
                     selector: 'node',
                     style: {
                         'background-color': '#666',
-                        'label': 'data(label)'
+                        'label': 'data(label)',
+                        'shape': 'data(type)'
                     }
                 },
         
@@ -219,7 +253,8 @@ function newUndirected(direction) { // creates new cytoscape for undirected grap
                     selector: 'node',
                     style: {
                         'background-color': '#666',
-                        'label': 'data(label)'
+                        'label': 'data(label)',
+                        'shape': 'data(type)'
                     }
                 },
         
@@ -255,7 +290,8 @@ function newUndirected(direction) { // creates new cytoscape for undirected grap
                     selector: 'node',
                     style: {
                         'background-color': '#666',
-                        'label': 'data(label)'
+                        'label': 'data(label)',
+                        'shape': 'data(type)'
                     }
                 },
         

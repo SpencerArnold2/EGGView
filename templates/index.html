@@ -17,7 +17,7 @@
    
     <div class="menu">
         <div class="dropdown">
-            <button onclick="dropdown()"class="menu_btn new">New</button>
+            <button class="menu_btn new">New</button>
             <div id="myDropdown" class="dropdown-content">
                 <button onclick="newDirected('left'); newDirected('right')" class="dropdown_directed">Directed</button>
                 <button onclick="newUndirected('left'); newUndirected('right')" class="dropdown_undirected">Undirected</button>
@@ -29,7 +29,7 @@
         <button class="menu_btn import" onclick="importGraph()">Import</button><input type="file" id= "file_import"accept=".json" onchange="readImport()"/>
         <button class="menu_btn export" onclick="exportGraph()">Export</button>
         <div class="dropdown">
-            <button onclick="dropdown()"class="menu_btn productions">Productions</button>
+            <button class="menu_btn productions">Productions</button>
             <div id="myDropdown_productions" class="dropdown-content-productions">
                 <button onclick="deactivate();currentProduction = 0; generateGraph(productions[0]); activate()" class="active" id="dropdown_pro0">Production 1</button>
 
@@ -43,10 +43,10 @@
         <div class="graph_editor_1">
             <div class="editor_menu 1">
                 <button onclick="addVertexLeft()"><i class="new_vertex"></i>Vertex</button>
-                <button onclick="addEdgeLeft()"><i class="new_dedge"></i>Edge</button>
-                <!-- <button onclick="addEdgeLeft()"><i class="new_uedge"></i>Undirected Edge</button> -->
+                <button onclick="addEdgeLeft()"><i class="new_edge"></i>Edge</button>
+                <button onclick="addDEdgeLeft()"><i class="new_dedge"></i>Dangling Edge</button>
                 <button onclick="deleteLeft()"><i class="new_uedge"></i>Delete</button>
-                <button onclick="cy_left.center()"><i class="new_uedge"></i>Center</button>
+                <button onclick="cy_left.center()"><i class="new_center"></i>Center</button>
                 <button onclick="addTextLeft()"><i class="new_text"></i>Text</button>
                 <input type="text" id="label-input_left" class="hidden-input">
             </div>
@@ -59,6 +59,7 @@
             <div class="editor_menu 2">
                 <button onclick="addVertexRight()"><i class="new_vertex"></i>Vertex</button>
                 <button onclick="addEdgeRight()"><i class="new_dedge"></i>Edge</button>
+                <button onclick="addDEdgeRight()"><i class="new_dedge"></i>Dangling Edge</button>
                 <!-- <button onclick="addEdgeRight()"><i class="new_uedge"></i>Undirected Edge</button> -->
                 <button onclick="deleteRight()"><i class="new_uedge"></i>Delete</button>
                 <button onclick="cy_right.center()"><i class="new_uedge"></i>Center</button>
