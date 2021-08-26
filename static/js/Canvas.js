@@ -1,5 +1,6 @@
 function dropdown() {
     document.getElementById("myDropdown").classList.toggle("show");
+    document.getElementById("myDropdown_productions").classList.toggle("show")
 }
 
 window.onclick = function (event) {
@@ -15,30 +16,52 @@ window.onclick = function (event) {
     }
 }
 
-function addText() {
-    document.getElementById("label-input").className = "show-text";
+function addTextLeft() {
+    document.getElementById("label-input_left").className = "show-text";
     var newLabel;
-    cy.on('tap', 'node', function (evt) {
+    cy_left.on('tap', 'node', function (evt) {
         var node = evt.target;
-        newLabel = document.getElementById("label-input").value;
+        newLabel = document.getElementById("label-input_left").value;
         node.data("label", newLabel);
-        cy.removeListener('tap');
-        document.getElementById("label-input").className = "hidden-input";
+        cy_left.removeListener('tap');
+        document.getElementById("label-input_left").className = "hidden-input";
     });
-    cy.on('tap', 'edge', function (evt) {
+    cy_left.on('tap', 'edge', function (evt) {
         var edge = evt.target;
-        newLabel = document.getElementById("label-input").value;
+        newLabel = document.getElementById("label-input_left").value;
         edge.data("label", newLabel);
-        cy.removeListener('tap');
-        document.getElementById("label-input").className = "hidden-input";
+        cy_left.removeListener('tap');
+        document.getElementById("label-input_left").className = "hidden-input";
+    });
+}
+function addTextRight() {
+    document.getElementById("label-input_right").className = "show-text";
+    var newLabel;
+    cy_right.on('tap', 'node', function (evt) {
+        var node = evt.target;
+        newLabel = document.getElementById("label-input_right").value;
+        node.data("label", newLabel);
+        cy_right.removeListener('tap');
+        document.getElementById("label-input_right").className = "hidden-input";
+    });
+    cy_right.on('tap', 'edge', function (evt) {
+        var edge = evt.target;
+        newLabel = document.getElementById("label-input_right").value;
+        edge.data("label", newLabel);
+        cy_right.removeListener('tap');
+        document.getElementById("label-input_right").className = "hidden-input";
     });
 }
 
-function exportGraph() {
-    var baseJSON = cy.json();
-    var productionID = "1"; //tmp
-    var directionStatus = "";
-    if (baseJSON["style"][1]["style"]["target-arrow-shape"] == "triangle") directionStatus = "Directed";
+var productions = [];
+var currentProduction = 0;
+var directionStatus = "";
+
+function saveGraph() {
+    var leftJSON = cy_left.json();
+    var rightJSON = cy_right.json();
+    var productionID = currentProduction; //tmp
+    if (leftJSON["style"][1]["style"]["target-arrow-shape"] == "triangle") directionStatus = "Directed";
     else directionStatus = "Undirected";
     var finalJSON = {
         "production": {
@@ -54,12 +77,115 @@ function exportGraph() {
             }
         }
     }
-    var line = 0;
-    for (var i = 0; i < baseJSON["elements"]["nodes"].length; i++) {
-        finalJSON["production"]["right"]["subgraph"][line++] = ([baseJSON["elements"]["nodes"][i]["group"], [baseJSON["elements"]["nodes"][i]["data"]], [baseJSON["elements"]["nodes"][i]["position"]]])
+    var left_line = 0;
+    var right_line = 0;
+    if(leftJSON["elements"]["nodes"] == null){
+        finalJSON["production"]["left"]["subgraph"][left_line++] = [];
+    }else{
+        for (var i = 0; i < leftJSON["elements"]["nodes"].length; i++) {
+            finalJSON["production"]["left"]["subgraph"][left_line++] = ([leftJSON["elements"]["nodes"][i]["group"], [leftJSON["elements"]["nodes"][i]["data"]], [leftJSON["elements"]["nodes"][i]["position"]]])
+        }
     }
-    for (var i = 0; i < baseJSON["elements"]["edges"].length; i++) {
-        finalJSON["production"]["right"]["subgraph"][line++] = ([baseJSON["elements"]["edges"][i]["group"], [baseJSON["elements"]["edges"][i]["data"]]])
+    if(rightJSON["elements"]["nodes"] == null){
+        finalJSON["production"]["right"]["subgraph"][right_line++] = [];
+    }else{
+        for (var i = 0; i < rightJSON["elements"]["nodes"].length; i++) {
+            finalJSON["production"]["right"]["subgraph"][right_line++] = ([rightJSON["elements"]["nodes"][i]["group"], [rightJSON["elements"]["nodes"][i]["data"]], [rightJSON["elements"]["nodes"][i]["position"]]])
+        }
+    }
+    if(leftJSON["elements"]["edges"] == null){
+        finalJSON["production"]["left"]["subgraph"][left_line++] = [];
+    }else{
+        for (var i = 0; i < leftJSON["elements"]["edges"].length; i++) {
+            finalJSON["production"]["left"]["subgraph"][left_line++] = ([leftJSON["elements"]["edges"][i]["group"], [leftJSON["elements"]["edges"][i]["data"]], [leftJSON["elements"]["edges"][i]["position"]]])
+        }
+    }
+    if(rightJSON["elements"]["edges"] == null){
+        finalJSON["production"]["right"]["subgraph"][right_line++] = [];
+    }else{
+        for (var i = 0; i < rightJSON["elements"]["edges"].length; i++) {
+            finalJSON["production"]["right"]["subgraph"][right_line++] = ([rightJSON["elements"]["edges"][i]["group"], [rightJSON["elements"]["edges"][i]["data"]], [rightJSON["elements"]["edges"][i]["position"]]])
+        }
+    }
+
+    finalJSON = JSON.stringify(finalJSON);
+    var blob = new Blob([finalJSON], { type: "application/json;charset=utf-8" });
+    if(productions[currentProduction]!= null){
+        productions[currentProduction] = finalJSON;
+    }else{
+        productions.push(finalJSON);
+    }
+}
+
+function deactivate(){
+    saveGraph();
+    var lastButton = document.getElementsByClassName("active")[0];
+    lastButton.setAttribute("class", "");
+}
+function activate(){
+    var currentButton = document.getElementById("dropdown_pro" + currentProduction);
+    currentButton.setAttribute("class", "active");
+}
+
+
+function createProduction(){
+    if(directionStatus=='Directed'){
+        newDirected('left');
+        newDirected('right');
+    }
+    else{
+        newUndirected('left');
+        newUndirected('right');
+    }
+
+    var newButton = document.createElement("BUTTON");
+    newButton.setAttribute('onclick', 'deactivate();currentProduction = ' + currentProduction + ';document.getElementById("dropdown_pro" + currentProduction).setAttribute("class", "");generateGraph(productions[' + currentProduction + ']);activate()')
+    newButton.setAttribute('id', 'dropdown_pro' + currentProduction);
+    newButton.setAttribute('class', "active");
+    var text = document.createTextNode('Production ' + (currentProduction+1))
+    newButton.appendChild(text);
+    var newPro = document.getElementById("dropdown_newPro")
+    newPro.before(newButton);
+}
+
+function exportGraph() {
+    var leftJSON = cy_left.json();
+    var rightJSON = cy_right.json();
+    var productionID = "1"; //tmp
+    var directionStatus = "";
+    if (leftJSON["style"][1]["style"]["target-arrow-shape"] == "triangle") directionStatus = "Directed";
+    else directionStatus = "Undirected";
+    var finalJSON = {
+        "production": {
+            "productionID": productionID,
+            "directionStatus": directionStatus,
+
+            "left": {
+                "subgraph": []
+            },
+
+            "right": {
+                "subgraph": []
+            }
+        }
+    }
+    var left_line = 0;
+    var right_line = 0;
+    if(leftJSON["elements"]["nodes"] == null){
+        finalJSON["production"]["left"]["subgraph"][left_line++] = [];
+    }else{
+        for (var i = 0; i < leftJSON["elements"]["nodes"].length; i++) {
+            finalJSON["production"]["left"]["subgraph"][left_line++] = ([leftJSON["elements"]["nodes"][i]["group"], [leftJSON["elements"]["nodes"][i]["data"]], [leftJSON["elements"]["nodes"][i]["position"]]])
+        }
+    }
+    for (var i = 0; i < rightJSON["elements"]["nodes"].length; i++) {
+        finalJSON["production"]["right"]["subgraph"][right_line++] = ([rightJSON["elements"]["nodes"][i]["group"], [rightJSON["elements"]["nodes"][i]["data"]], [rightJSON["elements"]["nodes"][i]["position"]]])
+    }
+    for (var i = 0; i < leftJSON["elements"]["edges"].length; i++) {
+        finalJSON["production"]["left"]["subgraph"][left_line++] = ([leftJSON["elements"]["edges"][i]["group"], [leftJSON["elements"]["edges"][i]["data"]]])
+    }
+    for (var i = 0; i < rightJSON["elements"]["edges"].length; i++) {
+        finalJSON["production"]["right"]["subgraph"][right_line++] = ([rightJSON["elements"]["edges"][i]["group"], [rightJSON["elements"]["edges"][i]["data"]]])
     }
 
     finalJSON = JSON.stringify(finalJSON);
@@ -84,28 +210,36 @@ function readImport() {
 
 function generateGraph(str) {
     var newJSON = JSON.parse(str);
-    console.log(newJSON);
     var directionStatus = newJSON["production"]["directionStatus"];
 
     if (directionStatus == "Directed") {
-        newDirected();
+        newDirected("left");
+        newDirected("right");
     } else {
-        newUndirected();
+        newUndirected("left");
+        newUndirected("right")
     }
 
     var cyLeft = newJSON["production"]["left"];
     var cyRight = newJSON["production"]["right"];
-    var line = 0;
-    for (var i =0; i<cyRight["subgraph"].length;i++) {
-        if (cyRight["subgraph"][i][0] == "nodes") {
-            addVertex(cyRight["subgraph"][i][1][0]["id"], cyRight["subgraph"][i][1][0]["label"], cyRight["subgraph"][i][2][0]["x"], cyRight["subgraph"][i][2][0]["y"]);
-        } else {
-            // console.log(cyRight["subgraph"][i][1][0][""]);
-            addEdge(cyRight["subgraph"][i][1][0]["id"], cyRight["subgraph"][i][1][0]["label"], cyRight["subgraph"][i][1][0]["source"], cyRight["subgraph"][i][1][0]["target"])
-            console.log("test")
+    for (var i =0; i<cyLeft["subgraph"].length;i++) {
+        if (cyLeft["subgraph"][i][0] == "nodes") {
+            _addVertexLeft(cyLeft["subgraph"][i][1][0]["id"], cyLeft["subgraph"][i][1][0]["label"], cyLeft["subgraph"][i][2][0]["x"], cyLeft["subgraph"][i][2][0]["y"]);
+        } else if(cyLeft["subgraph"][i][0] == "edges"){
+            // console.log(cyLeft["subgraph"][i][1][0][""]);
+            _addEdgeLeft(cyLeft["subgraph"][i][1][0]["id"], cyLeft["subgraph"][i][1][0]["label"], cyLeft["subgraph"][i][1][0]["source"], cyLeft["subgraph"][i][1][0]["target"]);
         }
 
     }
-
+    var line = 0;
+    for (var i =0; i<cyRight["subgraph"].length;i++) {
+        if (cyRight["subgraph"][i][0] == "nodes") {
+            _addVertexRight(cyRight["subgraph"][i][1][0]["id"], cyRight["subgraph"][i][1][0]["label"], cyRight["subgraph"][i][2][0]["x"], cyRight["subgraph"][i][2][0]["y"]);
+        } else if(cyRight["subgraph"][i][0] == "edges"){
+            // console.log(cyRight["subgraph"][i][1][0][""]);
+            _addEdgeRight(cyRight["subgraph"][i][1][0]["id"], cyRight["subgraph"][i][1][0]["label"], cyRight["subgraph"][i][1][0]["source"], cyRight["subgraph"][i][1][0]["target"])
+        }
+    }
+    cy_left.center();
+    cy_right.center();
 }
-

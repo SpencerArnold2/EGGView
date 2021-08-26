@@ -1,22 +1,38 @@
-var vID;
-var eID;
-function addVertexTop() {
+var left_vID;
+var right_vID;
+var left_eID;
+var right_eID;
+function addVertexLeft() {
 
-    var eles = cy.add([
-        { group: 'nodes', data: { label: 'n' + vID, id: 'n' + vID++, }, position: { x: 100, y: 100 } }
+    var eles = cy_left.add([
+        { group: 'nodes', data: { label: 'n' + left_vID, id: 'n' + left_vID++, }, position: { x: 100, y: 100 } }
     ]);
 
 }
 
-function addVertex(id, label, newX, newY) {
-    var eles = cy.add([
+function _addVertexLeft(id, label, newX, newY) {
+    var eles = cy_left.add([
         { group: 'nodes', data: { label: label, id: id, }, position: { x: newX, y: newY } }
     ]);
+    left_vID++;
+}
+function addVertexRight() {
+
+    var eles = cy_right.add([
+        { group: 'nodes', data: { label: 'n' + right_vID, id: 'n' + right_vID++, }, position: { x: 100, y: 100 } }
+    ]);
+
+}
+function _addVertexRight(id, label, newX, newY) {
+    var eles = cy_right.add([
+        { group: 'nodes', data: { label: label, id: id, }, position: { x: newX, y: newY } }
+    ]);
+    right_vID++;
 }
 
-function addEdgeTop() {
+function addEdgeLeft() {
     var node1, node2;
-    cy.on('tap', 'node', function (evt) {
+    cy_left.on('tap', 'node', function (evt) {
         var node = evt.target;
         if (node1 == null) {
             node1 = node.id();
@@ -25,121 +41,247 @@ function addEdgeTop() {
             node2 = node.id();
         }
         if (node1 != null && node2 != null) {
-            var eles = cy.add([
-                { group: 'edges', data: { label: '', id: 'e' + eID++, source: node1, target: node2 } }
+            var eles = cy_left.add([
+                { group: 'edges', data: { label: '', id: 'e' + left_eID++, source: node1, target: node2 } }
             ]);
             node1 = null;
             node2 = null;
-            cy.removeListener('tap');
+            cy_left.removeListener('tap');
         }
     });
 }
 
-function addEdge(id, label, node1, node2){
-    console.log(node1, node2);
-    var eles = cy.add([
+function addEdgeRight() {
+    var node1, node2;
+    cy_right.on('tap', 'node', function (evt) {
+        var node = evt.target;
+        if (node1 == null) {
+            node1 = node.id();
+        }
+        else {
+            node2 = node.id();
+        }
+        if (node1 != null && node2 != null) {
+            var eles = cy_right.add([
+                { group: 'edges', data: { label: '', id: 'e' + right_eID++, source: node1, target: node2 } }
+            ]);
+            node1 = null;
+            node2 = null;
+            cy_right.removeListener('tap');
+        }
+    });
+}
+
+function _addEdgeRight(id, label, node1, node2){
+    var eles = cy_right.add([
         { group: 'edges', data: { label: label, id: id, source: node1, target: node2 } }
     ]);
+    right_eID++;
 }
 
-function deleteTop() {
-    cy.on('tap', 'node', function (evt) {
+function _addEdgeLeft(id, label, node1, node2){
+    var eles = cy_left.add([
+        { group: 'edges', data: { label: label, id: id, source: node1, target: node2 } }
+    ]);
+    left_eID++;
+}
+
+function deleteLeft() {
+    cy_left.on('tap', 'node', function (evt) {
         var node = evt.target;
         if (node != null) {
-            cy.remove(node);
-            cy.removeListener('tap');
+            cy_left.remove(node);
+            cy_left.removeListener('tap');
         }
     });
-    cy.on('tap', 'edge', function (evt) {
+    cy_left.on('tap', 'edge', function (evt) {
         var edge = evt.target;
         if (edge != null) {
-            cy.remove(edge);
-            cy.removeListener('tap');
+            cy_left.remove(edge);
+            cy_left.removeListener('tap');
+        }
+    });
+}
+
+function deleteRight() {
+    cy_right.on('tap', 'node', function (evt) {
+        var node = evt.target;
+        if (node != null) {
+            cy_right.remove(node);
+            cy_right.removeListener('tap');
+        }
+    });
+    cy_right.on('tap', 'edge', function (evt) {
+        var edge = evt.target;
+        if (edge != null) {
+            cy_right.remove(edge);
+            cy_right.removeListener('tap');
         }
     });
 }
 
 
-function newDirected() { // creates new cytoscape for directed graphs
+function newDirected(direction) { // creates new cytoscape for directed graphs
     // cy.destroy();
-    vID = 0;
-    eID = 0;
-    cy = cytoscape({
+    left_vID = 0;
+    right_vID = 0;
+    left_eID = 0;
+    right_eID = 0;
+    if(direction=="left"){
+        con = document.getElementById('cy_left');
+        cy_left = cytoscape({
 
-        container: document.getElementById('cy'), // container to render in
-    
-        elements: [],
-    
-        style: [ // the stylesheet for the graph
-            {
-                selector: 'node',
-                style: {
-                    'background-color': '#666',
-                    'label': 'data(label)'
+            container: con, // container to render in
+        
+            elements: [],
+        
+            style: [ // the stylesheet for the graph
+                {
+                    selector: 'node',
+                    style: {
+                        'background-color': '#666',
+                        'label': 'data(label)'
+                    }
+                },
+        
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 3,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'triangle', //difference between the two graphs
+                        'curve-style': 'bezier',
+                        'label': 'data(label)'
+                    }
                 }
-            },
-    
-            {
-                selector: 'edge',
-                style: {
-                    'width': 3,
-                    'line-color': '#ccc',
-                    'target-arrow-color': '#ccc',
-                    'target-arrow-shape': 'triangle', //difference between the two graphs
-                    'curve-style': 'bezier',
-                    'label': 'data(label)'
+            ],
+        
+            layout: {
+                name: 'grid',
+                rows: 1
+            }
+        
+        });
+    }else{
+        con = document.getElementById('cy_right');
+        cy_right = cytoscape({
+
+            container: con, // container to render in
+        
+            elements: [],
+        
+            style: [ // the stylesheet for the graph
+                {
+                    selector: 'node',
+                    style: {
+                        'background-color': '#666',
+                        'label': 'data(label)'
+                    }
+                },
+        
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 3,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'triangle', //difference between the two graphs
+                        'curve-style': 'bezier',
+                        'label': 'data(label)'
+                    }
                 }
+            ],
+        
+            layout: {
+                name: 'grid',
+                rows: 1
             }
-        ],
-    
-        layout: {
-            name: 'grid',
-            rows: 1
-        }
-    
-    });
-    console.log("New directed graph created")
-}
-
-function newUndirected() { // creates new cytoscape for undirected graphs
-
-    vID = 0;
-    eID = 0;
-    cy = cytoscape({
-
-    container: document.getElementById('cy'), // container to render in
-
-    elements: [],
-
-    style: [ // the stylesheet for the graph
-        {
-            selector: 'node',
-            style: {
-                'background-color': '#666',
-                'label': 'data(label)',
-            }
-        },
-
-        {
-            selector: 'edge',
-            style: {
-                'width': 3,
-                'line-color': '#ccc',
-                'target-arrow-color': '#ccc',
-                'target-arrow-shape': 'none',
-                'curve-style': 'bezier',
-                'label': 'data(label)'
-            }
-        }
-    ],
-
-    layout: {
-        name: 'grid',
-        rows: 1
+        
+        });
     }
-
-});
+    
 }
+
+function newUndirected(direction) { // creates new cytoscape for undirected graphs
+    vID = 0;
+    eID = 0;
+    if(direction=="left"){
+        con = document.getElementById('cy_left');
+        cy_left = cytoscape({
+
+            container: con, // container to render in
+        
+            elements: [],
+        
+            style: [ // the stylesheet for the graph
+                {
+                    selector: 'node',
+                    style: {
+                        'background-color': '#666',
+                        'label': 'data(label)'
+                    }
+                },
+        
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 3,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'none', //difference between the two graphs
+                        'curve-style': 'bezier',
+                        'label': 'data(label)'
+                    }
+                }
+            ],
+        
+            layout: {
+                name: 'grid',
+                rows: 1
+            }
+        
+        });
+    }else{
+        con = document.getElementById('cy_right');
+        cy_right = cytoscape({
+
+            container: con, // container to render in
+        
+            elements: [],
+        
+            style: [ // the stylesheet for the graph
+                {
+                    selector: 'node',
+                    style: {
+                        'background-color': '#666',
+                        'label': 'data(label)'
+                    }
+                },
+        
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 3,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'none', //difference between the two graphs
+                        'curve-style': 'bezier',
+                        'label': 'data(label)'
+                    }
+                }
+            ],
+        
+            layout: {
+                name: 'grid',
+                rows: 1
+            }
+        
+        });
+    }
+    
+}
+
 
 
 
