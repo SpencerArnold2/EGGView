@@ -151,8 +151,7 @@ function createProduction(){
 function exportGraph() {
     var leftJSON = cy_left.json();
     var rightJSON = cy_right.json();
-    var productionID = "1"; //tmp
-    var directionStatus = "";
+    var productionID = currentProduction; //tmp
     if (leftJSON["style"][1]["style"]["target-arrow-shape"] == "triangle") directionStatus = "Directed";
     else directionStatus = "Undirected";
     var finalJSON = {
@@ -178,14 +177,26 @@ function exportGraph() {
             finalJSON["production"]["left"]["subgraph"][left_line++] = ([leftJSON["elements"]["nodes"][i]["group"], [leftJSON["elements"]["nodes"][i]["data"]], [leftJSON["elements"]["nodes"][i]["position"]]])
         }
     }
-    for (var i = 0; i < rightJSON["elements"]["nodes"].length; i++) {
-        finalJSON["production"]["right"]["subgraph"][right_line++] = ([rightJSON["elements"]["nodes"][i]["group"], [rightJSON["elements"]["nodes"][i]["data"]], [rightJSON["elements"]["nodes"][i]["position"]]])
+    if(rightJSON["elements"]["nodes"] == null){
+        finalJSON["production"]["right"]["subgraph"][right_line++] = [];
+    }else{
+        for (var i = 0; i < rightJSON["elements"]["nodes"].length; i++) {
+            finalJSON["production"]["right"]["subgraph"][right_line++] = ([rightJSON["elements"]["nodes"][i]["group"], [rightJSON["elements"]["nodes"][i]["data"]], [rightJSON["elements"]["nodes"][i]["position"]]])
+        }
     }
-    for (var i = 0; i < leftJSON["elements"]["edges"].length; i++) {
-        finalJSON["production"]["left"]["subgraph"][left_line++] = ([leftJSON["elements"]["edges"][i]["group"], [leftJSON["elements"]["edges"][i]["data"]]])
+    if(leftJSON["elements"]["edges"] == null){
+        finalJSON["production"]["left"]["subgraph"][left_line++] = [];
+    }else{
+        for (var i = 0; i < leftJSON["elements"]["edges"].length; i++) {
+            finalJSON["production"]["left"]["subgraph"][left_line++] = ([leftJSON["elements"]["edges"][i]["group"], [leftJSON["elements"]["edges"][i]["data"]], [leftJSON["elements"]["edges"][i]["position"]]])
+        }
     }
-    for (var i = 0; i < rightJSON["elements"]["edges"].length; i++) {
-        finalJSON["production"]["right"]["subgraph"][right_line++] = ([rightJSON["elements"]["edges"][i]["group"], [rightJSON["elements"]["edges"][i]["data"]]])
+    if(rightJSON["elements"]["edges"] == null){
+        finalJSON["production"]["right"]["subgraph"][right_line++] = [];
+    }else{
+        for (var i = 0; i < rightJSON["elements"]["edges"].length; i++) {
+            finalJSON["production"]["right"]["subgraph"][right_line++] = ([rightJSON["elements"]["edges"][i]["group"], [rightJSON["elements"]["edges"][i]["data"]], [rightJSON["elements"]["edges"][i]["position"]]])
+        }
     }
 
     finalJSON = JSON.stringify(finalJSON);
@@ -224,7 +235,13 @@ function generateGraph(str) {
     var cyRight = newJSON["production"]["right"];
     for (var i =0; i<cyLeft["subgraph"].length;i++) {
         if (cyLeft["subgraph"][i][0] == "nodes") {
-            _addVertexLeft(cyLeft["subgraph"][i][1][0]["id"], cyLeft["subgraph"][i][1][0]["label"], cyLeft["subgraph"][i][2][0]["x"], cyLeft["subgraph"][i][2][0]["y"]);
+            if(cyLeft["subgraph"][i][1][0]["type"]== "ellipse"){
+                _addVertexLeft(cyLeft["subgraph"][i][1][0]["id"], cyLeft["subgraph"][i][1][0]["label"], cyLeft["subgraph"][i][2][0]["x"], cyLeft["subgraph"][i][2][0]["y"]);
+            }
+            else{
+                _addDEdgeLeft(cyLeft["subgraph"][i][1][0]["id"], cyLeft["subgraph"][i][1][0]["label"], cyLeft["subgraph"][i][2][0]["x"], cyLeft["subgraph"][i][2][0]["y"]);
+            }
+            
         } else if(cyLeft["subgraph"][i][0] == "edges"){
             // console.log(cyLeft["subgraph"][i][1][0][""]);
             _addEdgeLeft(cyLeft["subgraph"][i][1][0]["id"], cyLeft["subgraph"][i][1][0]["label"], cyLeft["subgraph"][i][1][0]["source"], cyLeft["subgraph"][i][1][0]["target"]);
@@ -234,7 +251,12 @@ function generateGraph(str) {
     var line = 0;
     for (var i =0; i<cyRight["subgraph"].length;i++) {
         if (cyRight["subgraph"][i][0] == "nodes") {
-            _addVertexRight(cyRight["subgraph"][i][1][0]["id"], cyRight["subgraph"][i][1][0]["label"], cyRight["subgraph"][i][2][0]["x"], cyRight["subgraph"][i][2][0]["y"]);
+            if(cyRight["subgraph"][i][1][0]["type"]== "ellipse"){
+                _addVertexRight(cyRight["subgraph"][i][1][0]["id"], cyRight["subgraph"][i][1][0]["label"], cyRight["subgraph"][i][2][0]["x"], cyRight["subgraph"][i][2][0]["y"]);
+            }
+            else{
+                _addDEdgeRight(cyRight["subgraph"][i][1][0]["id"], cyRight["subgraph"][i][1][0]["label"], cyRight["subgraph"][i][2][0]["x"], cyRight["subgraph"][i][2][0]["y"]);
+            }
         } else if(cyRight["subgraph"][i][0] == "edges"){
             // console.log(cyRight["subgraph"][i][1][0][""]);
             _addEdgeRight(cyRight["subgraph"][i][1][0]["id"], cyRight["subgraph"][i][1][0]["label"], cyRight["subgraph"][i][1][0]["source"], cyRight["subgraph"][i][1][0]["target"])
