@@ -24,7 +24,7 @@
     left: 0;
     border:5px;
     width: 1500px;
-    margin: auto;
+    margin-left: 10%;
 }
 
 .menu_btn:hover{
