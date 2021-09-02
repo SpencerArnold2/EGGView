@@ -122,6 +122,13 @@ function deactivate(){
     var lastButton = document.getElementsByClassName("active")[0];
     lastButton.setAttribute("class", "");
 }
+function deactivateAll(){
+    saveGraph();
+    var lastButtons = document.getElementsByClassName("active");
+    for(var i = 0; i<lastButtons.length; i++){
+        lastButtons[i].setAttribute("class", "");
+    }
+}
 function activate(){
     var currentButton = document.getElementById("dropdown_pro" + currentProduction);
     currentButton.setAttribute("class", "active");
@@ -148,10 +155,10 @@ function createProduction(){
     newPro.before(newButton);
 }
 
-function exportGraph() {
+function exportProduction(pID) {
     var leftJSON = cy_left.json();
     var rightJSON = cy_right.json();
-    var productionID = currentProduction; //tmp
+    var productionID = pID;
     if (leftJSON["style"][1]["style"]["target-arrow-shape"] == "triangle") directionStatus = "Directed";
     else directionStatus = "Undirected";
     var finalJSON = {
@@ -199,9 +206,18 @@ function exportGraph() {
         }
     }
 
-    finalJSON = JSON.stringify(finalJSON);
-    var blob = new Blob([finalJSON], { type: "application/json;charset=utf-8" });
-    console.log(finalJSON)
+    // finalJSON = JSON.stringify(finalJSON);
+    return finalJSON;
+}
+
+function exportGraph(){
+    saveGraph();
+    var exportJSON = {productions};
+    // exportJSON = exportJSON.toString();
+    // exportJSON = '[' + exportJSON + ']';
+    exportJSON = JSON.stringify(exportJSON);
+    var blob = new Blob([exportJSON], { type: "application/json;charset=utf-8" });
+    console.log(exportJSON);
     saveAs(blob, "export.json");
 }
 
@@ -214,7 +230,26 @@ function readImport() {
     const reader = new FileReader();
     reader.onload = function (evt) {
         var output = evt.target.result;
-        generateGraph(output);
+        $("[id*='dropdown_pro']").remove();
+        // for(var i =0; i<productions.length; i++){
+        //     $("[id*='dropdown_pro']").remove();
+        // }
+        console.log(output);
+        outputJSON = JSON.parse(output);
+        productions = outputJSON["productions"];
+        generateGraph(productions[0]);
+        for(var i =0; i<productions.length; i++){
+            var newButton = document.createElement("BUTTON");
+            newButton.setAttribute('onclick', 'deactivate();currentProduction = ' + i + ';document.getElementById("dropdown_pro" + currentProduction).setAttribute("class", "");generateGraph(productions[' + i + ']);activate()')
+            newButton.setAttribute('id', 'dropdown_pro' + i);
+            newButton.setAttribute('class', "");
+            var text = document.createTextNode('Production ' + (i+1))
+            newButton.appendChild(text);
+            var newPro = document.getElementById("dropdown_newPro")
+            newPro.before(newButton);
+        }
+        currentProduction = 0;
+        activate();
     };
     reader.readAsText(selectedFile);
 }
