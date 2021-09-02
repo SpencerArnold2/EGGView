@@ -155,6 +155,21 @@ function createProduction(){
     newPro.before(newButton);
 }
 
+function addProduction(){
+    var newButton = document.createElement("BUTTON");
+    newButton.setAttribute('onclick', 'deactivate();currentProduction = ' + currentProduction + ';document.getElementById("dropdown_pro" + currentProduction).setAttribute("class", "");generateGraph(productions[' + currentProduction + ']);activate()')
+    newButton.setAttribute('id', 'dropdown_pro' + currentProduction);
+    newButton.setAttribute('class', "active");
+    var text = document.createTextNode('Production ' + (currentProduction+1))
+    newButton.appendChild(text);
+    var newPro = document.getElementById("dropdown_newPro")
+    newPro.before(newButton);
+}
+
+function setCurrentProduction(num){
+    currentProduction = num;
+}
+
 function exportProduction(pID) {
     var leftJSON = cy_left.json();
     var rightJSON = cy_right.json();

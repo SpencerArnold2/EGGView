@@ -151,6 +151,95 @@ function deleteRight() {
 }
 
 
+function _newDirected(direction) { // USED FOR BUTTON
+    // cy.destroy();
+    productions = [];
+    setCurrentProduction(0);
+    $("[id*='dropdown_pro']").remove();
+    left_vID = 0;
+    right_vID = 0;
+    left_dvID = 0;
+    right_dvID = 0;
+    left_eID = 0;
+    right_eID = 0;
+    if(direction=="left"){
+        con = document.getElementById('cy_left');
+        cy_left = cytoscape({
+
+            container: con, // container to render in
+        
+            elements: [],
+        
+            style: [ // the stylesheet for the graph
+                {
+                    selector: 'node',
+                    style: {
+                        'background-color': '#666',
+                        'label': 'data(label)',
+                        'shape': 'data(type)'
+                    }
+                },
+        
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 3,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'triangle', //difference between the two graphs
+                        'curve-style': 'bezier',
+                        'label': 'data(label)'
+                    }
+                }
+            ],
+        
+            layout: {
+                name: 'grid',
+                rows: 1
+            }
+        
+        });
+    }else{
+        con = document.getElementById('cy_right');
+        cy_right = cytoscape({
+
+            container: con, // container to render in
+        
+            elements: [],
+        
+            style: [ // the stylesheet for the graph
+                {
+                    selector: 'node',
+                    style: {
+                        'background-color': '#666',
+                        'label': 'data(label)',
+                        'shape': 'data(type)'
+                    }
+                },
+        
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 3,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'triangle', //difference between the two graphs
+                        'curve-style': 'bezier',
+                        'label': 'data(label)'
+                    }
+                }
+            ],
+        
+            layout: {
+                name: 'grid',
+                rows: 1
+            }
+        
+        });
+    }
+    addProduction();
+}
+
 function newDirected(direction) { // creates new cytoscape for directed graphs
     // cy.destroy();
     left_vID = 0;
@@ -234,7 +323,90 @@ function newDirected(direction) { // creates new cytoscape for directed graphs
         
         });
     }
-    
+}
+
+function _newUndirected(direction) { // creates new cytoscape for undirected graphs
+    productions = [];
+    currentProduction = 0;
+    $("[id*='dropdown_pro']").remove();
+    vID = 0;
+    eID = 0;
+    if(direction=="left"){
+        con = document.getElementById('cy_left');
+        cy_left = cytoscape({
+
+            container: con, // container to render in
+        
+            elements: [],
+        
+            style: [ // the stylesheet for the graph
+                {
+                    selector: 'node',
+                    style: {
+                        'background-color': '#666',
+                        'label': 'data(label)',
+                        'shape': 'data(type)'
+                    }
+                },
+        
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 3,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'none', //difference between the two graphs
+                        'curve-style': 'bezier',
+                        'label': 'data(label)'
+                    }
+                }
+            ],
+        
+            layout: {
+                name: 'grid',
+                rows: 1
+            }
+        
+        });
+    }else{
+        con = document.getElementById('cy_right');
+        cy_right = cytoscape({
+
+            container: con, // container to render in
+        
+            elements: [],
+        
+            style: [ // the stylesheet for the graph
+                {
+                    selector: 'node',
+                    style: {
+                        'background-color': '#666',
+                        'label': 'data(label)',
+                        'shape': 'data(type)'
+                    }
+                },
+        
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 3,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'none', //difference between the two graphs
+                        'curve-style': 'bezier',
+                        'label': 'data(label)'
+                    }
+                }
+            ],
+        
+            layout: {
+                name: 'grid',
+                rows: 1
+            }
+        
+        });
+    }
+    addProduction();
 }
 
 function newUndirected(direction) { // creates new cytoscape for undirected graphs
@@ -315,9 +487,6 @@ function newUndirected(direction) { // creates new cytoscape for undirected grap
         
         });
     }
-    
 }
-
-
 
 
