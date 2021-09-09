@@ -354,3 +354,12 @@ function verifyProductions(){ // Verifies if each production follows rules.
     console.log("All tests passed.");
     return true;
 }
+
+function deleteProduction(){
+    if(currentProduction == 0) return null;
+    productions.splice(currentProduction, 1);
+    $("[id*='dropdown_pro" + currentProduction + "']").remove();
+    generateGraph(productions[productions.length-1]);
+    currentProduction = productions.length-1;
+    activate();
+}
