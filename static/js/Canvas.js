@@ -108,6 +108,9 @@ function saveGraph() {
         }
     }
 
+    finalJSON["production"]["left"]["subgraph"] = finalJSON["production"]["left"]["subgraph"].filter(e => e.length);
+    finalJSON["production"]["right"]["subgraph"] = finalJSON["production"]["right"]["subgraph"].filter(e => e.length);
+
     finalJSON = JSON.stringify(finalJSON);
     var blob = new Blob([finalJSON], { type: "application/json;charset=utf-8" });
     if(productions[currentProduction]!= null){
@@ -314,4 +317,40 @@ function generateGraph(str) {
     }
     cy_left.center();
     cy_right.center();
+}
+
+function stringToJSON(str){
+    return JSON.parse(str);
+}
+
+function verifyProductions(){ // Verifies if each production follows rules.
+    saveGraph();
+    var JSONProductions = [];
+    for(var i = 0;i < productions.length; i++){ //makes the string productions into objects
+        var tmp = stringToJSON(productions[i]);
+        JSONProductions.push(tmp);
+    }
+    var initialProd = [];
+    for(var i = 0; i < JSONProductions.length; i++){ 
+        if(JSONProductions[i]["production"]["left"]["subgraph"].length == 0 || JSONProductions[i]["production"]["right"]["subgraph"].length == 0){ //checks if any graph is empty.
+            console.log("Production " + (i+1) + " has one or two empty graphs");
+            return false;
+        }
+        if(JSONProductions[i]["production"]["left"]["subgraph"].length == 1){ //checks if there is only one graph with one vertex
+            initialProd.push(i);
+            if(initialProd.length > 1){
+                console.log("There can not be more than one production with one vertex.");
+                return false;
+            }
+        }
+        if(JSONProductions[i]["production"]["left"]["subgraph"].length > JSONProductions[i]["production"]["right"]["subgraph"].length){
+            console.log("Production " + (i+1) + "'s left side is larger than its right."); //may need some refining. Needs to check for vertex
+            return false;
+        }
+        
+    }
+
+
+    console.log("All tests passed.");
+    return true;
 }
