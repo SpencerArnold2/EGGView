@@ -233,7 +233,7 @@ function exportGraph(){
     var exportJSON = {productions};
     // exportJSON = exportJSON.toString();
     // exportJSON = '[' + exportJSON + ']';
-    exportJSON = JSON.stringify(exportJSON);
+    // exportJSON = JSON.stringify(exportJSON);
     var blob = new Blob([exportJSON], { type: "application/json;charset=utf-8" });
     console.log(exportJSON);
     saveAs(blob, "export.json");
@@ -336,13 +336,13 @@ function verifyProductions(){ // Verifies if each production follows rules.
             console.log("Production " + (i+1) + " has one or two empty graphs");
             return false;
         }
-        if(JSONProductions[i]["production"]["left"]["subgraph"].length == 1){ //checks if there is only one graph with one vertex
-            initialProd.push(i);
-            if(initialProd.length > 1){
-                console.log("There can not be more than one production with one vertex.");
-                return false;
-            }
-        }
+        // if(JSONProductions[i]["production"]["left"]["subgraph"].length == 1){ //checks if there is only one graph with one vertex
+        //     initialProd.push(i);
+        //     if(initialProd.length > 1){
+        //         console.log("There can not be more than one production with one vertex.");
+        //         return false;
+        //     }
+        // }
         if(JSONProductions[i]["production"]["left"]["subgraph"].length > JSONProductions[i]["production"]["right"]["subgraph"].length){
             console.log("Production " + (i+1) + "'s left side is larger than its right."); //may need some refining. Needs to check for vertex
             return false;
@@ -353,6 +353,65 @@ function verifyProductions(){ // Verifies if each production follows rules.
 
     console.log("All tests passed.");
     return true;
+}
+
+function exportGML(){
+    saveGraph();
+    var exportJSON = productions[currentProduction];
+    exportJSON = JSON.parse(exportJSON);
+    exportNodesLeft = [];
+    exportEdgesLeft = [];
+    exportNodesRight = [];
+    exportEdgesRight = [];
+    for(var i =0; i<exportJSON["production"]["left"]["subgraph"].length; i++){
+        if(exportJSON["production"]["left"]["subgraph"][i][0]=="nodes"){
+            exportNodesLeft.push("\t\t\t\tnode [ id " + exportJSON["production"]["left"]["subgraph"][i][1][0]["id"] + " label " + exportJSON["production"]["left"]["subgraph"][i][1][0]["label"] + " ] \n");
+        }
+        if(exportJSON["production"]["left"]["subgraph"][i][0]=="edges"){
+            exportEdgesLeft.push("\t\t\t\tedge [ id " + exportJSON["production"]["left"]["subgraph"][i][1][0]["id"] + " source " + exportJSON["production"]["left"]["subgraph"][i][1][0]["source"] + " target " + exportJSON["production"]["left"]["subgraph"][i][1][0]["target"] + " ] \n");
+            // exportEdgesLeft.push("\t\t\t\tedge [ id " + exportJSON["production"]["left"]["subgraph"][i][1][0]["id"] + " target " + exportJSON["production"]["left"]["subgraph"][i][1][0]["target"] + " ] \n");
+        }
+    }
+
+    for(var i =0; i<exportJSON["production"]["right"]["subgraph"].length; i++){
+        if(exportJSON["production"]["right"]["subgraph"][i][0]=="nodes"){
+            exportNodesRight.push("\t\t\t\tnode [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["id"] + " label " + exportJSON["production"]["right"]["subgraph"][i][1][0]["label"] + " ] \n");
+        }
+        if(exportJSON["production"]["right"]["subgraph"][i][0]=="edges"){
+            exportEdgesRight.push("\t\t\t\tedge [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["id"] + " source " + exportJSON["production"]["right"]["subgraph"][i][1][0]["source"] + " target " + exportJSON["production"]["right"]["subgraph"][i][1][0]["target"] + " ] \n");
+            // exportEdgesRight.push("\t\t\t\tedge [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["id"] + " target " + exportJSON["production"]["right"]["subgraph"][i][1][0]["target"] + " ] \n");
+        }
+    }
+
+    finalGML = "production [\n" +
+        "\tproductionID " + exportJSON["production"]["productionID"] + "\n" +
+        "\tdirectionStatus " + exportJSON["production"]["directionStatus"] + "\n" +
+        "\n" +
+        "\t\tleft [\n" +
+            "\t\t\tsubgraph [\n"
+    for(var i=0; i<exportNodesLeft.length; i++){
+        finalGML+= exportNodesLeft[i];
+    }
+    finalGML+= "\n";
+    for(var i=0; i<exportEdgesLeft.length; i++){
+        finalGML+= exportEdgesLeft[i];
+    }
+    finalGML+= "\t\t\t]\n" + "\t\t]\n" + "\n" + "\t\tright [\n" + "\t\t\tsubgraph [\n";
+    for(var i=0; i<exportNodesRight.length; i++){
+        finalGML+= exportNodesRight[i];
+    }
+    finalGML+= "\n";
+    for(var i=0; i<exportEdgesRight.length; i++){
+        finalGML+= exportEdgesRight[i];
+    }
+
+    finalGML+= "\t\t\t]\n" + "\t\t]\n" + "\t]\n" + "]\n";
+
+    // return finalGML;
+    var blob = new Blob([finalGML], { type: "application/gml;charset=utf-8" });
+    console.log(finalGML);
+    saveAs(blob, "export.gml");
+
 }
 
 function deleteProduction(){

@@ -27,7 +27,13 @@
         
         
         <button class="menu_btn import" onclick="importGraph()">Import</button><input type="file" id= "file_import"accept=".json" onchange="readImport()"/>
-        <button class="menu_btn export" onclick="exportGraph()">Export</button>
+        <div class="dropdown">
+            <button class="menu_btn export">Export</button>
+            <div id="myDropdown_export" class="dropdown-content-export">
+                <button class="menu_btn export_json" onclick="exportGraph()">JSON</button>
+                <button class="menu_btn export_GML" onclick="exportGML()">GML</button>
+            </div>
+        </div>
         <div class="dropdown">
             <button class="menu_btn productions">Productions</button>
             <div id="myDropdown_productions" class="dropdown-content-productions">
@@ -37,7 +43,7 @@
             </div>
         </div>
         <button class="menu_btn delete_production" onclick="deleteProduction()">Delete Production</button>
-        <button class="menu_btn transform" onclick="verifyProductions()">Transform</button>
+        <!-- <button class="menu_btn transform" onclick="verifyProductions()">Transform</button> -->
     </div>
 
     <div class="Canvas">
