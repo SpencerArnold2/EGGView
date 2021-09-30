@@ -384,12 +384,17 @@ function exportGML(){
     }
 
     for(var i =0; i<exportJSON["production"]["right"]["subgraph"].length; i++){
-        if(exportJSON["production"]["right"]["subgraph"][i][0]=="nodes"){
+        if(exportJSON["production"]["right"]["subgraph"][i][0]=="nodes"  && exportJSON["production"]["right"]["subgraph"][i][1][0]["type"]=="ellipse"){
             exportNodesRight.push("\t\t\t\tnode [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["id"][1] + " label " + exportJSON["production"]["right"]["subgraph"][i][1][0]["label"] + " ] \n");
         }
-        if(exportJSON["production"]["right"]["subgraph"][i][0]=="edges"){
-            exportEdgesRight.push("\t\t\t\tedge [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["id"][1] + " source " + exportJSON["production"]["right"]["subgraph"][i][1][0]["source"] + " target " + exportJSON["production"]["right"]["subgraph"][i][1][0]["target"] + " ] \n");
-            // exportEdgesRight.push("\t\t\t\tedge [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["id"] + " target " + exportJSON["production"]["right"]["subgraph"][i][1][0]["target"] + " ] \n");
+        if(exportJSON["production"]["right"]["subgraph"][i][1][0]["source"][0]=="d"){
+            exportEdgesRight.push("\t\t\t\tedge [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["id"][1] + " target " + exportJSON["production"]["right"]["subgraph"][i][1][0]["target"][1] + " ] \n");
+        }
+        else if (exportJSON["production"]["right"]["subgraph"][i][1][0]["target"][0]=="d"){
+            exportEdgesRight.push("\t\t\t\tedge [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["id"][1] + " source " + exportJSON["production"]["right"]["subgraph"][i][1][0]["source"][1] + " ] \n");
+        }
+        else {
+            exportEdgesRight.push("\t\t\t\tedge [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["id"][1] + " source " + exportJSON["production"]["right"]["subgraph"][i][1][0]["source"][1] + " target " + exportJSON["production"]["right"]["subgraph"][i][1][0]["target"][1] + " ] \n");
         }
     }
 
