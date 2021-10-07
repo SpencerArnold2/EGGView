@@ -53,6 +53,25 @@ function addTextRight() {
     });
 }
 
+function addIDLeft(){
+    document.getElementById("label-input_left").className = "show-text";
+    var newLabel;
+    cy_left.on('tap', 'node', function (evt) {
+        var node = evt.target;
+        newLabel = document.getElementById("label-input_left").value;
+        node.data("_id", newLabel);
+        cy_left.removeListener('tap');
+        document.getElementById("label-input_left").className = "hidden-input";
+    });
+    cy_left.on('tap', 'edge', function (evt) {
+        var edge = evt.target;
+        newLabel = document.getElementById("label-input_left").value;
+        edge.data("_id", newLabel);
+        cy_left.removeListener('tap');
+        document.getElementById("label-input_left").className = "hidden-input";
+    });
+}
+
 var productions = [];
 var currentProduction = 0;
 var directionStatus = "";
@@ -365,36 +384,36 @@ function exportGML(){
     exportEdgesRight = [];
     for(var i =0; i<exportJSON["production"]["left"]["subgraph"].length; i++){
         if(exportJSON["production"]["left"]["subgraph"][i][0]=="nodes" && exportJSON["production"]["left"]["subgraph"][i][1][0]["type"]=="ellipse"){
-            exportNodesLeft.push("\t\t\t\tnode [ id " + exportJSON["production"]["left"]["subgraph"][i][1][0]["id"][1] + " label " + exportJSON["production"]["left"]["subgraph"][i][1][0]["label"] + " ] \n");
+            exportNodesLeft.push("\t\t\t\tnode [ id " + exportJSON["production"]["left"]["subgraph"][i][1][0]["_id"] + " label " + exportJSON["production"]["left"]["subgraph"][i][1][0]["label"] + " ] \n");
         }
         // if(exportJSON["production"]["left"]["subgraph"][i][0]=="nodes" && exportJSON["production"]["left"]["subgraph"][i][1][0]["type"]=="round-tag"){
         //     exportEdgesLeft.push("\t\t\t\tedge [ id " + exportJSON["production"]["left"]["subgraph"][i][1][0]["id"][1] + " label " + exportJSON["production"]["left"]["subgraph"][i][1][0]["label"] + " ] \n");
         // }
         if(exportJSON["production"]["left"]["subgraph"][i][0]=="edges"){
             if(exportJSON["production"]["left"]["subgraph"][i][1][0]["source"][0]=="d"){
-                exportEdgesLeft.push("\t\t\t\tedge [ id " + exportJSON["production"]["left"]["subgraph"][i][1][0]["id"][1] + " target " + exportJSON["production"]["left"]["subgraph"][i][1][0]["target"][1] + " ] \n");
+                exportEdgesLeft.push("\t\t\t\tedge [ id " + exportJSON["production"]["left"]["subgraph"][i][1][0]["_id"] + " target " + exportJSON["production"]["left"]["subgraph"][i][1][0]["target"] + " ] \n");
             }
             else if (exportJSON["production"]["left"]["subgraph"][i][1][0]["target"][0]=="d"){
-                exportEdgesLeft.push("\t\t\t\tedge [ id " + exportJSON["production"]["left"]["subgraph"][i][1][0]["id"][1] + " source " + exportJSON["production"]["left"]["subgraph"][i][1][0]["source"][1] + " ] \n");
+                exportEdgesLeft.push("\t\t\t\tedge [ id " + exportJSON["production"]["left"]["subgraph"][i][1][0]["_id"] + " source " + exportJSON["production"]["left"]["subgraph"][i][1][0]["source"] + " ] \n");
             }
             else {
-                exportEdgesLeft.push("\t\t\t\tedge [ id " + exportJSON["production"]["left"]["subgraph"][i][1][0]["id"][1] + " source " + exportJSON["production"]["left"]["subgraph"][i][1][0]["source"][1] + " target " + exportJSON["production"]["left"]["subgraph"][i][1][0]["target"][1] + " ] \n");
+                exportEdgesLeft.push("\t\t\t\tedge [ id " + exportJSON["production"]["left"]["subgraph"][i][1][0]["_id"] + " source " + exportJSON["production"]["left"]["subgraph"][i][1][0]["source"] + " target " + exportJSON["production"]["left"]["subgraph"][i][1][0]["target"] + " ] \n");
             }
         }
     }
 
     for(var i =0; i<exportJSON["production"]["right"]["subgraph"].length; i++){
         if(exportJSON["production"]["right"]["subgraph"][i][0]=="nodes"  && exportJSON["production"]["right"]["subgraph"][i][1][0]["type"]=="ellipse"){
-            exportNodesRight.push("\t\t\t\tnode [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["id"][1] + " label " + exportJSON["production"]["right"]["subgraph"][i][1][0]["label"] + " ] \n");
+            exportNodesRight.push("\t\t\t\tnode [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["_id"] + " label " + exportJSON["production"]["right"]["subgraph"][i][1][0]["label"] + " ] \n");
         }
         if(exportJSON["production"]["right"]["subgraph"][i][1][0]["source"][0]=="d"){
-            exportEdgesRight.push("\t\t\t\tedge [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["id"][1] + " target " + exportJSON["production"]["right"]["subgraph"][i][1][0]["target"][1] + " ] \n");
+            exportEdgesRight.push("\t\t\t\tedge [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["_id"] + " target " + exportJSON["production"]["right"]["subgraph"][i][1][0]["target"] + " ] \n");
         }
         else if (exportJSON["production"]["right"]["subgraph"][i][1][0]["target"][0]=="d"){
-            exportEdgesRight.push("\t\t\t\tedge [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["id"][1] + " source " + exportJSON["production"]["right"]["subgraph"][i][1][0]["source"][1] + " ] \n");
+            exportEdgesRight.push("\t\t\t\tedge [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["_id"] + " source " + exportJSON["production"]["right"]["subgraph"][i][1][0]["source"] + " ] \n");
         }
         else {
-            exportEdgesRight.push("\t\t\t\tedge [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["id"][1] + " source " + exportJSON["production"]["right"]["subgraph"][i][1][0]["source"][1] + " target " + exportJSON["production"]["right"]["subgraph"][i][1][0]["target"][1] + " ] \n");
+            exportEdgesRight.push("\t\t\t\tedge [ id " + exportJSON["production"]["right"]["subgraph"][i][1][0]["_id"] + " source " + exportJSON["production"]["right"]["subgraph"][i][1][0]["source"] + " target " + exportJSON["production"]["right"]["subgraph"][i][1][0]["target"] + " ] \n");
         }
     }
 

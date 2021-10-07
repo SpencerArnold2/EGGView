@@ -5,27 +5,27 @@ var right_eID, left_dvID, right_dvID;
 function addVertexLeft() {
 
     var eles = cy_left.add([
-        { group: 'nodes', data: { label: 'n' + left_vID, id: 'n' + left_vID++, type: "ellipse"}, position: { x: 100, y: 100 } }
+        { group: 'nodes', data: { label:"", id: left_vID++, type: "ellipse", _id: left_vID-1}, position: { x: 100, y: 100 } }
     ]);
 
 }
 
 function _addVertexLeft(id, label, newX, newY) {
     var eles = cy_left.add([
-        { group: 'nodes', data: { label: label, id: id, type: "ellipse"}, position: { x: newX, y: newY } }
+        { group: 'nodes', data: { label: label, id: id, type: "ellipse", _id: id}, position: { x: newX, y: newY } }
     ]);
     left_vID++;
 }
 function addVertexRight() {
 
     var eles = cy_right.add([
-        { group: 'nodes', data: { label: 'n' + right_vID, id: 'n' + right_vID++, type: "ellipse"}, position: { x: 100, y: 100 } }
+        { group: 'nodes', data: { label:"", id: right_vID++, type: "ellipse", _id: right_vID-1}, position: { x: 100, y: 100 } }
     ]);
 
 }
 function _addVertexRight(id, label, newX, newY) {
     var eles = cy_right.add([
-        { group: 'nodes', data: { label: label, id: id, type: "ellipse"}, position: { x: newX, y: newY } }
+        { group: 'nodes', data: { label: label, id: id, type: "ellipse", _id: id}, position: { x: newX, y: newY } }
     ]);
     right_vID++;
 }
@@ -33,27 +33,27 @@ function _addVertexRight(id, label, newX, newY) {
 function addDEdgeLeft() {
 
     var eles = cy_left.add([
-        { group: 'nodes', data: { label: 'dv' + left_dvID, id: 'dv' + left_dvID++, type: "round-tag"}, position: { x: 100, y: 100 } }
+        { group: 'nodes', data: { label: '', id: 'dv' + left_dvID++, type: "round-tag", _id: left_dvID-1}, position: { x: 100, y: 100 } }
     ]);
 
 }
 
 function _addDEdgeLeft(id, label, newX, newY) {
     var eles = cy_left.add([
-        { group: 'nodes', data: { label: label, id: id, type: "round-tag"}, position: { x: newX, y: newY } }
+        { group: 'nodes', data: { label: label, id: id, type: "round-tag", _id: id}, position: { x: newX, y: newY } }
     ]);
     left_dvID++;
 }
 function addDEdgeRight() {
 
     var eles = cy_right.add([
-        { group: 'nodes', data: { label: 'dv' + right_dvID, id: 'dv' + right_dvID++, type: "round-tag"}, position: { x: 100, y: 100 } }
+        { group: 'nodes', data: { label: '', id: 'dv' + right_dvID++, type: "round-tag", _id: right_dvID-1}, position: { x: 100, y: 100 } }
     ]);
 
 }
 function _addDEdgeRight(id, label, newX, newY) {
     var eles = cy_right.add([
-        { group: 'nodes', data: { label: label, id: id, type: "round-tag"}, position: { x: newX, y: newY } }
+        { group: 'nodes', data: { label: label, id: id, type: "round-tag", _id: id}, position: { x: newX, y: newY } }
     ]);
     right_dvID++;
 }
@@ -72,7 +72,7 @@ function addEdgeLeft() {
         }
         if (node1 != null && node2 != null) {
             var eles = cy_left.add([
-                { group: 'edges', data: { label: '', id: 'e' + left_eID++, source: node1, target: node2 } }
+                { group: 'edges', data: { label: '', id:'e' +left_eID++, source: node1, target: node2, _id: left_eID-1 } }
             ]);
             node1 = null;
             node2 = null;
@@ -93,7 +93,7 @@ function addEdgeRight() {
         }
         if (node1 != null && node2 != null) {
             var eles = cy_right.add([
-                { group: 'edges', data: { label: '', id: 'e' + right_eID++, source: node1, target: node2 } }
+                { group: 'edges', data: { label: '', id:'e' + right_eID++, source: node1, target: node2, _id: right_eID-1 } }
             ]);
             node1 = null;
             node2 = null;
@@ -156,12 +156,12 @@ function _newDirected(direction) { // USED FOR BUTTON
     productions = [];
     setCurrentProduction(0);
     $("[id*='dropdown_pro']").remove();
-    left_vID = 0;
-    right_vID = 0;
-    left_dvID = 0;
-    right_dvID = 0;
-    left_eID = 0;
-    right_eID = 0;
+    left_vID = 1;
+    right_vID = 1;
+    left_dvID = 1;
+    right_dvID = 1;
+    left_eID = 1;
+    right_eID = 1;
     if(direction=="left"){
         con = document.getElementById('cy_left');
         cy_left = cytoscape({
@@ -242,12 +242,12 @@ function _newDirected(direction) { // USED FOR BUTTON
 
 function newDirected(direction) { // creates new cytoscape for directed graphs
     // cy.destroy();
-    left_vID = 0;
-    right_vID = 0;
-    left_dvID = 0;
-    right_dvID = 0;
-    left_eID = 0;
-    right_eID = 0;
+    left_vID = 1;
+    right_vID = 1;
+    left_dvID = 1;
+    right_dvID = 1;
+    left_eID = 1;
+    right_eID = 1;
     if(direction=="left"){
         con = document.getElementById('cy_left');
         cy_left = cytoscape({
@@ -329,8 +329,8 @@ function _newUndirected(direction) { // creates new cytoscape for undirected gra
     productions = [];
     currentProduction = 0;
     $("[id*='dropdown_pro']").remove();
-    vID = 0;
-    eID = 0;
+    vID = 1;
+    eID = 1;
     if(direction=="left"){
         con = document.getElementById('cy_left');
         cy_left = cytoscape({
@@ -410,8 +410,8 @@ function _newUndirected(direction) { // creates new cytoscape for undirected gra
 }
 
 function newUndirected(direction) { // creates new cytoscape for undirected graphs
-    vID = 0;
-    eID = 0;
+    vID = 1;
+    eID = 1;
     if(direction=="left"){
         con = document.getElementById('cy_left');
         cy_left = cytoscape({
