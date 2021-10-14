@@ -17,37 +17,33 @@
 // }
 
 function addTextLeft() {
-    document.getElementById("label-input_left").className = "show-text";
+    // document.getElementById("label-input_left").className = "show-text";
     var newLabel;
     cy_left.on('tap', 'node', function (evt) {
         var node = evt.target;
-        newLabel = document.getElementById("label-input_left").value;
-        node.data("label", newLabel);
+        promptNode(node);
         cy_left.removeListener('tap');
         document.getElementById("label-input_left").className = "hidden-input";
     });
     cy_left.on('tap', 'edge', function (evt) {
         var edge = evt.target;
-        newLabel = document.getElementById("label-input_left").value;
-        edge.data("label", newLabel);
+        promptEdge(edge);
         cy_left.removeListener('tap');
         document.getElementById("label-input_left").className = "hidden-input";
     });
 }
 function addTextRight() {
-    document.getElementById("label-input_right").className = "show-text";
+    // document.getElementById("label-input_right").className = "show-text";
     var newLabel;
     cy_right.on('tap', 'node', function (evt) {
         var node = evt.target;
-        newLabel = document.getElementById("label-input_right").value;
-        node.data("label", newLabel);
+        promptNode(node);
         cy_right.removeListener('tap');
         document.getElementById("label-input_right").className = "hidden-input";
     });
     cy_right.on('tap', 'edge', function (evt) {
         var edge = evt.target;
-        newLabel = document.getElementById("label-input_right").value;
-        edge.data("label", newLabel);
+        promptEdge(edge);
         cy_right.removeListener('tap');
         document.getElementById("label-input_right").className = "hidden-input";
     });
@@ -455,4 +451,65 @@ function deleteProduction(){
     generateGraph(productions[productions.length-1]);
     currentProduction = productions.length-1;
     activate();
+}
+
+function promptNode(node){
+    if(confirm("Is the new label either an atomic symbol or Initial? OK for yes, cancel for no.")){
+        while(true){
+            newLabel = prompt("Choose one of the following labels:\n1)Initial\n2)C\n3)O\n4)N\n5)H\n6)S\n7)P\n8)F\n9)Cl\n10)Br\n11)I", "1");
+            if(isNaN(parseInt(newLabel)) || parseInt(newLabel) > 11 || parseInt(newLabel) < 1){
+                confirm("Please enter an integer from 1-11.");
+            }
+            else{
+                newLabel = parseInt(newLabel);
+                if(newLabel==1) node.data("label", "Initial");
+                if(newLabel==2) node.data("label", "C");
+                if(newLabel==3) node.data("label", "O");
+                if(newLabel==4) node.data("label", "N");
+                if(newLabel==5) node.data("label", "H");
+                if(newLabel==6) node.data("label", "S");
+                if(newLabel==7) node.data("label", "P");
+                if(newLabel==8) node.data("label", "F");
+                if(newLabel==9) node.data("label", "Cl");
+                if(newLabel==10) node.data("label", "Br");
+                if(newLabel==11) node.data("label", "I");
+                break;
+            }
+        } 
+    }
+    else{
+        newLabel = prompt("Enter a new label for the node.");
+        node.data("label", newLabel);
+    }
+}
+
+function promptEdge(edge){
+    newLabel = '';
+    if(confirm("Is it a linear bond? OK for yes, cancel for no.")) newLabel += "linear|";
+    else newLabel += "ring|";
+    if(confirm("Is it an aromatic bond? OK for yes, cancel for no.")) newLabel += "t|";
+    else newLabel += "f|";
+    if(confirm("Is it a conjugated bond? OK for yes, cancel for no.")) newLabel += "t|";
+    else newLabel += "f|";
+    while(true){
+        optionsList = ["SINGLE", "DOUBLE", "TRIPLE", "QUADRUPLE", 'QUINTUPLE', 'HEXTUPLE', 'ONEANDAHALF', 'TWOANDAHALF', 'THREEANDAHALF', 'FOURANDAHALF', 'FIVEANDAHALF', 'AROMATIC', 'IONIC', 'HYDROGEN', 'THREECENTER', 'DATIVEONE', 'DATIVE', 'DATIVEL', 'DATIVER', 'OTHER', 'ZERO'];
+        aString = "Choose one of the following labels:\n";
+        for(var i=0;i<optionsList.length; i++){
+            aString+= (i+1) + ")" + optionsList[i] + "\n"; 
+        }
+        field4 = prompt(aString, "1");
+        if(isNaN(parseInt(field4)) || parseInt(field4) > 21 || parseInt(field4) < 1){
+            confirm("Please enter an integer from 1-21.");
+        }
+        else{
+            field4 = parseInt(field4);
+            if(field4==20){
+                field4Str = prompt("Enter other string.");
+            }
+            else field4Str = optionsList[field4-1];
+            newLabel += field4Str;
+            edge.data("label", newLabel)
+            break;
+        }
+    }
 }
