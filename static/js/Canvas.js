@@ -21,7 +21,7 @@ function addTextLeft() {
     var newLabel;
     cy_left.on('tap', 'node', function (evt) {
         var node = evt.target;
-        promptNode(node);
+        promptNode(node, "left");
         cy_left.removeListener('tap');
         document.getElementById("label-input_left").className = "hidden-input";
     });
@@ -37,7 +37,7 @@ function addTextRight() {
     var newLabel;
     cy_right.on('tap', 'node', function (evt) {
         var node = evt.target;
-        promptNode(node);
+        promptNode(node, "right");
         cy_right.removeListener('tap');
         document.getElementById("label-input_right").className = "hidden-input";
     });
@@ -453,7 +453,7 @@ function deleteProduction(){
     activate();
 }
 
-function promptNode(node){
+function promptNode(node, direction){
     if(confirm("Is the new label either an atomic symbol or Initial? OK for yes, cancel for no.")){
         while(true){
             newLabel = prompt("Choose one of the following labels:\n1)Initial\n2)C\n3)O\n4)N\n5)H\n6)S\n7)P\n8)F\n9)Cl\n10)Br\n11)I", "1");
@@ -475,16 +475,33 @@ function promptNode(node){
                 if(newLabel==11) node.data("label", "I");
                 break;
             }
-        } 
+        }
     }
     else{
         newLabel = prompt("Enter a new label for the node.");
         node.data("label", newLabel);
     }
+    if(direction=="right"){
+        if(confirm("Is the node flexible to a node on the left side?")){
+            sizeL = cy_left.nodes().size();
+            str = node.data("label");
+            confirmStr = "Which node is it flexible to?\n";
+            for(var i=0; i<sizeL; i++){
+                confirmStr+= cy_left.nodes()[i].data()["id"] +")\n";
+            }
+            flexible = prompt(confirmStr, "1");
+            if(isNaN(parseInt(flexible)) || parseInt(flexible) > sizeL || parseInt(flexible) < 1){
+                confirm("Please enter an integer from 1-" + sizeL + ".");
+            }
+            str+=" flexible true left " + flexible;
+            node.data("label", str);
+        }
+    }
 }
 
 function promptEdge(edge){
     newLabel = '';
+    if(confirm("Is it a focus edge? OK for yes, cancel for no.")) newLabel += "focus|";
     if(confirm("Is it a linear bond? OK for yes, cancel for no.")) newLabel += "linear|";
     else newLabel += "ring|";
     if(confirm("Is it an aromatic bond? OK for yes, cancel for no.")) newLabel += "t|";
