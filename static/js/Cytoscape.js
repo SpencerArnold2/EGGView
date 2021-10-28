@@ -102,6 +102,7 @@ function addEdgeRight() {
     });
 }
 
+
 function _addEdgeRight(id, label, node1, node2){
     var eles = cy_right.add([
         { group: 'edges', data: { label: label, id: id, source: node1, target: node2 } }
@@ -148,6 +149,35 @@ function deleteRight() {
             cy_right.removeListener('tap');
         }
     });
+}
+
+function nodeListener() {
+    var tmp = "";
+    cy_left.removeAllListeners();
+    cy_right.removeAllListeners();
+    cy_left.on('tap', 'node', function(event){
+        var node = event.target;
+        console.log(node.data("id")!=node.data("label"))
+        if(node.data("id")!=node.data("label")){
+            tmp = node.data("label");
+            node.data("label",node.data("id"));
+        }
+        else{
+            node.data("label", tmp);
+        }
+    })
+    cy_right.on('tap', 'node', function(event){
+        var node = event.target;
+        console.log(node.data("id")!=node.data("label"))
+        if(node.data("id")!=node.data("label")){
+            tmp = node.data("label");
+            node.data("label",node.data("id"));
+        }
+        else{
+            node.data("label", tmp);
+        }
+    })
+    
 }
 
 
@@ -323,6 +353,7 @@ function newDirected(direction) { // creates new cytoscape for directed graphs
         
         });
     }
+    
 }
 
 function _newUndirected(direction) { // creates new cytoscape for undirected graphs
@@ -407,6 +438,7 @@ function _newUndirected(direction) { // creates new cytoscape for undirected gra
         });
     }
     addProduction();
+    
 }
 
 function newUndirected(direction) { // creates new cytoscape for undirected graphs
@@ -487,6 +519,7 @@ function newUndirected(direction) { // creates new cytoscape for undirected grap
         
         });
     }
+    
 }
 
 

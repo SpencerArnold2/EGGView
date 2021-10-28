@@ -67,7 +67,6 @@ function addIDLeft(){
         document.getElementById("label-input_left").className = "hidden-input";
     });
 }
-
 var productions = [];
 var currentProduction = 0;
 var directionStatus = "";
