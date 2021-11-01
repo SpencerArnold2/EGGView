@@ -1,2 +1,2 @@
-# EGGSS
-Edge-based graph grammar support system
+# EGG-View
+Edge-based graph grammar viewer and editor
