@@ -14,7 +14,7 @@ fi
 
 echo $condaPath
 
-echo "Enter the version number of EGG-View (NOTE: specifying an existing version will overwrite that file): "
+echo "Enter the version number of EGGView (NOTE: specifying an existing version will overwrite that file): "
 read versionNumber
 
 appPath=$PWD
@@ -31,8 +31,8 @@ echo Anaconda environment created.
 
 #Add Gunicorn service
 
-echo Creating EGG-View$versionNumber.service file...
-cat <<EOF >/etc/systemd/system/EGG-View$versionNumber.service
+echo Creating EGGView$versionNumber.service file...
+cat <<EOF >/etc/systemd/system/EGGView$versionNumber.service
 [Unit]
 Description=Creates an instance of Gunicorn to allow clients access the application
 After=network.target
@@ -41,21 +41,21 @@ User=$SUDO_USER
 Group=www-data
 WorkingDirectory=$appPath/app
 Environment="PATH=$appPath/condaenv/bin"
-ExecStart=$appPath/condaenv/bin/gunicorn --workers 4 --bind unix:EGG-View.sock -m 007 wsgi:app
+ExecStart=$appPath/condaenv/bin/gunicorn --workers 4 --bind unix:EGGView.sock -m 007 wsgi:app
 [Install]
 WantedBy=multi-user.target
 EOF
-echo EGG-View$versionNumber.service successfully created.
+echo EGGView$versionNumber.service successfully created.
 
 #Add nginx server block
 
 echo Creating nginx server block...
-cat <<EOF >/etc/nginx/sites-available/EGG-View$versionNumber
+cat <<EOF >/etc/nginx/sites-available/EGGView$versionNumber
 server {
     listen 80;
-    location /egg-view {
+    location /EGGView {
         include proxy_params;
-        proxy_pass http://unix:/$appPath/app/EGG-View.sock;
+        proxy_pass http://unix:/$appPath/app/EGGView.sock;
     }
 }
 EOF
@@ -64,7 +64,7 @@ echo nginx server block successfully created.
 
 echo Initializing nginx server block...
 #Command to enable and prepare nginx server block config
-ln -s /etc/nginx/sites-available/EGG-View$versionNumber /etc/nginx/sites-enabled
+ln -s /etc/nginx/sites-available/EGGView$versionNumber /etc/nginx/sites-enabled
 
 #test for syntax errors
 nginx -t
@@ -75,32 +75,32 @@ systemctl daemon-reload
 systemctl restart nginx
 echo nginx restarted and server block is operational.
 
-systemctl start EGG-View$versionNumber
-systemctl enable EGG-View$versionNumber
+systemctl start EGGView$versionNumber
+systemctl enable EGGView$versionNumber
 
-echo EGG-View$versionNumber.service should be operational. Here is its status:
-systemctl status EGG-View$versionNumber
+echo EGGView$versionNumber.service should be operational. Here is its status:
+systemctl status EGGView$versionNumber
 
 echo nginx should be operational. Here is its status:
 systemctl status nginx
 
-echo "Is the EGG-View$versionNumber and nginx status green (y/n)"
+echo "Is the EGGView$versionNumber and nginx status green (y/n)"
 read response
 
 if [[ $response = 'n' || $response = 'N' ]]; then
     echo Site failed to launch
     echo Removing created service file...
-    rm /etc/systemd/system/EGG-View$versionNumber.service
+    rm /etc/systemd/system/EGGView$versionNumber.service
     echo Removing created nginx sites-available and sites-enabled files...
-    rm /etc/nginx/sites-available/EGG-View$versionNumber
-    rm /etc/nginx/sites-enabled/EGG-View$versionNumber
+    rm /etc/nginx/sites-available/EGGView$versionNumber
+    rm /etc/nginx/sites-enabled/EGGView$versionNumber
     echo Created /etc files successfully deleted
 
 else
     echo Enter name of last version to prevent it from being started by the server on boot-up
     read lastVersionNumber
     systemctl disable $lastVersionNumber
-    echo Start service on boot-up for EGG-View$lastVersionNumber is:
+    echo Start service on boot-up for EGGView$lastVersionNumber is:
     systemctl is-enabled $lastVersionNumber
     echo Site setup successfully
 fi
