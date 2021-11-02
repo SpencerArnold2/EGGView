@@ -3,3 +3,4 @@ FirstSketch.PNG
 __pycache__/app.cpython-38.pyc
 .env
 TODO
+/condaenv
