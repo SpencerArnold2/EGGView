@@ -157,10 +157,9 @@ function nodeListener() {
     cy_right.removeAllListeners();
     cy_left.on('taphold', 'node', function(event){
         var node = event.target;
-        console.log(node.data("id")!=node.data("label"))
-        if(node.data("id")!=node.data("label")){
+        if(node.data("_id")!=node.data("label")){
             tmp = node.data("label");
-            node.data("label",node.data("id"));
+            node.data("label",node.data("_id"));
         }
         else{
             node.data("label", tmp);
@@ -168,10 +167,9 @@ function nodeListener() {
     })
     cy_right.on('taphold', 'node', function(event){
         var node = event.target;
-        console.log(node.data("id")!=node.data("label"))
-        if(node.data("id")!=node.data("label")){
+        if(node.data("_id")!=node.data("label")){
             tmp = node.data("label");
-            node.data("label",node.data("id"));
+            node.data("label",node.data("_id"));
         }
         else{
             node.data("label", tmp);

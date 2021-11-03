@@ -247,7 +247,7 @@ function exportGraph(){
     var exportJSON = {productions};
     // exportJSON = exportJSON.toString();
     // exportJSON = '[' + exportJSON + ']';
-    // exportJSON = JSON.stringify(exportJSON);
+    exportJSON = JSON.stringify(exportJSON);
     var blob = new Blob([exportJSON], { type: "application/json;charset=utf-8" });
     console.log(exportJSON);
     saveAs(blob, "export.json");
