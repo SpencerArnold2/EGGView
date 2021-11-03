@@ -155,7 +155,7 @@ function nodeListener() {
     var tmp = "";
     cy_left.removeAllListeners();
     cy_right.removeAllListeners();
-    cy_left.on('tap', 'node', function(event){
+    cy_left.on('taphold', 'node', function(event){
         var node = event.target;
         console.log(node.data("id")!=node.data("label"))
         if(node.data("id")!=node.data("label")){
@@ -166,7 +166,7 @@ function nodeListener() {
             node.data("label", tmp);
         }
     })
-    cy_right.on('tap', 'node', function(event){
+    cy_right.on('taphold', 'node', function(event){
         var node = event.target;
         console.log(node.data("id")!=node.data("label"))
         if(node.data("id")!=node.data("label")){

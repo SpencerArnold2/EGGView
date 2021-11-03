@@ -163,7 +163,7 @@ function createProduction(){
     }
 
     var newButton = document.createElement("BUTTON");
-    newButton.setAttribute('onclick', 'deactivate();currentProduction = ' + currentProduction + ';document.getElementById("dropdown_pro" + currentProduction).setAttribute("class", "");generateGraph(productions[' + currentProduction + ']);activate()')
+    newButton.setAttribute('onclick', 'deactivate();currentProduction = ' + currentProduction + ';document.getElementById("dropdown_pro" + currentProduction).setAttribute("class", "");generateGraph(productions[' + currentProduction + ']);activate();nodeListener();')
     newButton.setAttribute('id', 'dropdown_pro' + currentProduction);
     newButton.setAttribute('class', "active");
     var text = document.createTextNode('Production ' + (currentProduction+1))
@@ -174,7 +174,7 @@ function createProduction(){
 
 function addProduction(){
     var newButton = document.createElement("BUTTON");
-    newButton.setAttribute('onclick', 'deactivate();currentProduction = ' + currentProduction + ';document.getElementById("dropdown_pro" + currentProduction).setAttribute("class", "");generateGraph(productions[' + currentProduction + ']);activate()')
+    newButton.setAttribute('onclick', 'deactivate();currentProduction = ' + currentProduction + ';document.getElementById("dropdown_pro" + currentProduction).setAttribute("class", "");generateGraph(productions[' + currentProduction + ']);activate();nodeListener();')
     newButton.setAttribute('id', 'dropdown_pro' + currentProduction);
     newButton.setAttribute('class', "active");
     var text = document.createTextNode('Production ' + (currentProduction+1))
@@ -272,7 +272,7 @@ function readImport() {
         generateGraph(productions[0]);
         for(var i =0; i<productions.length; i++){
             var newButton = document.createElement("BUTTON");
-            newButton.setAttribute('onclick', 'deactivate();currentProduction = ' + i + ';document.getElementById("dropdown_pro" + currentProduction).setAttribute("class", "");generateGraph(productions[' + i + ']);activate()')
+            newButton.setAttribute('onclick', 'deactivate();currentProduction = ' + i + ';document.getElementById("dropdown_pro" + currentProduction).setAttribute("class", "");generateGraph(productions[' + i + ']);activate();nodeListener();')
             newButton.setAttribute('id', 'dropdown_pro' + i);
             newButton.setAttribute('class', "");
             var text = document.createTextNode('Production ' + (i+1))
