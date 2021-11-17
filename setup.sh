@@ -9,7 +9,7 @@
 if [[ $1 != "" ]]; then
     condaPath=$1
 else
-    condaPath=/home/$SUDO_USER/anaconda3/bin/conda
+    condaPath=/data/$SUDO_USER/anaconda3/bin/conda
 fi
 
 echo $condaPath
