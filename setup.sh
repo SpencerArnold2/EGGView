@@ -39,7 +39,7 @@ After=network.target
 [Service]
 User=$SUDO_USER
 Group=www-data
-WorkingDirectory=$appPath/app
+WorkingDirectory=$appPath
 Environment="PATH=$appPath/condaenv/bin"
 ExecStart=$appPath/condaenv/bin/gunicorn --workers 4 --bind unix:EGGView.sock -m 007 wsgi:app
 [Install]
@@ -53,9 +53,9 @@ echo Creating nginx server block...
 cat <<EOF >/etc/nginx/sites-available/EGGView$versionNumber
 server {
     listen 80;
-    location /EGGView {
+    location /eggview {
         include proxy_params;
-        proxy_pass http://unix:/$appPath/app/EGGView.sock;
+        proxy_pass http://unix:/$appPath/EGGView.sock;
     }
 }
 EOF
